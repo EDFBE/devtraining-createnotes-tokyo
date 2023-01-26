@@ -23,9 +23,12 @@
 			noteBody: c.data.note,
 			noteTitle: c.data.title
 		}).then(function(r) {
+			// When the promise is returned, emit the change
+			if (updateType == 'title' || updateType == 'body') { 
+				$rootScope.$emit('updateTitle', r.data); 
+			}
 		});
 	}
-
 }]]></client_script>
         <controller_as>c</controller_as>
         <css/>
@@ -55,6 +58,11 @@
 				note.title = input.noteTitle; 
 				note.note = input.noteBody; 
 				note.update();   
+				// Need to update the data object with the new title
+				// and first 40 characters of the note (do not want to write huge
+				// strings to the Notes List widget)
+				data.title = note.getValue('title');
+				data.note = note.getValue('note').slice(0,40);
 			}
 		}
 	}
